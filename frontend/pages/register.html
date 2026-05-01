@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Register — SecureShop</title>
+  <link rel="stylesheet" href="/css/style.css"/>
+</head>
+<body>
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <h2>Secure<span>Shop</span></h2>
+      <p>Create your account</p>
+    </div>
+
+    <div class="alert alert-error"   id="alert-error"></div>
+    <div class="alert alert-success" id="alert-success"></div>
+
+    <div class="form-group">
+      <label>Full Name</label>
+      <input type="text" id="name" placeholder="John Doe" />
+    </div>
+    <div class="form-group">
+      <label>Email Address</label>
+      <input type="email" id="email" placeholder="john@example.com" />
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" id="password" placeholder="Min 8 chars, uppercase, number, symbol" />
+      <small style="color:#999;font-size:.8rem;margin-top:4px;display:block;">
+        Must contain: uppercase, number, and one of !@#$%^&*
+      </small>
+    </div>
+    <div class="form-group">
+      <label>Confirm Password</label>
+      <input type="password" id="confirm" placeholder="Re-enter password" />
+    </div>
+
+    <button class="btn-primary" id="btn-register" onclick="handleRegister()">Create Account</button>
+    <p class="auth-link">Already have an account? <a href="/pages/login.html">Login</a></p>
+  </div>
+</div>
+
+<script src="/js/cart.js"></script>
+<script src="/js/api.js"></script>
+<script>
+  if (isLoggedIn()) window.location.href = "/";
+
+  async function handleRegister() {
+    hideAlert("alert-error");
+    hideAlert("alert-success");
+
+    const name     = document.getElementById("name").value.trim();
+    const email    = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+    const confirm  = document.getElementById("confirm").value;
+    const btn      = document.getElementById("btn-register");
+
+    if (!name || !email || !password) return showAlert("alert-error", "All fields are required.");
+    if (password !== confirm)         return showAlert("alert-error", "Passwords do not match.");
+
+    btn.disabled = true;
+    btn.textContent = "Creating account…";
+
+    const data = await apiRegister(name, email, password);
+
+    if (data.error) {
+      showAlert("alert-error", data.error);
+      btn.disabled = false;
+      btn.textContent = "Create Account";
+    } else if (data.errors) {
+      showAlert("alert-error", data.errors.map(e => e.msg).join(" | "));
+      btn.disabled = false;
+      btn.textContent = "Create Account";
+    } else {
+      showAlert("alert-success", "Account created! Redirecting to login…");
+      setTimeout(() => window.location.href = "/pages/login.html", 1500);
+    }
+  }
+
+  // Allow Enter key
+  document.addEventListener("keydown", e => { if (e.key === "Enter") handleRegister(); });
+</script>
+</body>
+</html>

@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Checkout — SecureShop</title>
+  <link rel="stylesheet" href="/css/style.css"/>
+</head>
+<body>
+  <div id="navbar"></div>
+
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title">Checkout</h2>
+      <p class="section-subtitle">Complete your secure order</p>
+
+      <div id="alert-area"></div>
+
+      <div class="checkout-grid">
+
+        <!-- Left: Forms -->
+        <div>
+          <!-- Shipping -->
+          <div class="card-box" style="margin-bottom:24px;">
+            <h3>📦 Shipping Address</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label>First Name</label>
+                <input type="text" id="fname" placeholder="John"/>
+              </div>
+              <div class="form-group">
+                <label>Last Name</label>
+                <input type="text" id="lname" placeholder="Doe"/>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Street Address</label>
+              <input type="text" id="street" placeholder="123 Main St"/>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>City</label>
+                <input type="text" id="city" placeholder="Boston"/>
+              </div>
+              <div class="form-group">
+                <label>ZIP Code</label>
+                <input type="text" id="zip" placeholder="02101"/>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Country</label>
+              <input type="text" id="country" placeholder="United States"/>
+            </div>
+          </div>
+
+          <!-- Payment (simulated — no real card data stored) -->
+          <div class="card-box">
+            <h3>💳 Payment Details</h3>
+            <div style="background:#f0fef4;border:1px solid #c3e6cb;border-radius:8px;padding:12px;margin-bottom:20px;font-size:.87rem;color:#155724;">
+              🔒 <strong>Demo Mode:</strong> No real payment is processed. Card details are never stored on our servers.
+            </div>
+            <div class="form-group">
+              <label>Card Number</label>
+              <input type="text" id="card-number" placeholder="4242 4242 4242 4242" maxlength="19"
+                oninput="formatCard(this)"/>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Expiry Date</label>
+                <input type="text" id="expiry" placeholder="MM/YY" maxlength="5"
+                  oninput="formatExpiry(this)"/>
+              </div>
+              <div class="form-group">
+                <label>CVV</label>
+                <input type="text" id="cvv" placeholder="123" maxlength="3"/>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Name on Card</label>
+              <input type="text" id="card-name" placeholder="John Doe"/>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Order Summary -->
+        <div>
+          <div class="card-box" style="position:sticky;top:80px;">
+            <h3>🧾 Order Summary</h3>
+            <div id="order-items" style="margin-bottom:16px;"></div>
+            <hr style="border:none;border-top:1px solid #f0f0f0;margin:16px 0;"/>
+            <div class="total-row" style="display:flex;justify-content:space-between;padding:8px 0;"><span>Subtotal</span><span id="ck-subtotal"></span></div>
+            <div class="total-row" style="display:flex;justify-content:space-between;padding:8px 0;"><span>Shipping</span><span id="ck-shipping"></span></div>
+            <div class="total-row" style="display:flex;justify-content:space-between;padding:8px 0;"><span>Tax (8%)</span><span id="ck-tax"></span></div>
+            <div style="display:flex;justify-content:space-between;padding:12px 0;font-weight:700;font-size:1.1rem;border-top:2px solid #f0f0f0;margin-top:8px;">
+              <span>Total</span><span id="ck-total" style="color:#e94560;"></span>
+            </div>
+
+            <button class="btn-primary" id="btn-place" onclick="placeOrder()" style="margin-top:8px;">
+              🔒 Place Order Securely
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Success Modal -->
+  <div id="success-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;display:none;align-items:center;justify-content:center;">
+    <div style="background:white;border-radius:16px;padding:48px;text-align:center;max-width:420px;margin:24px;">
+      <div style="font-size:4rem;">✅</div>
+      <h2 style="margin:16px 0 8px;">Order Placed!</h2>
+      <p style="color:#777;margin-bottom:24px;">Your order has been placed successfully. Check your email for confirmation.</p>
+      <a href="/pages/orders.html" class="btn-hero">View My Orders</a>
+    </div>
+  </div>
+
+  <footer class="footer"><p>© 2025 <span>SecureShop</span></p></footer>
+
+  <script src="/js/cart.js"></script>
+  <script src="/js/api.js"></script>
+  <script>
+    if (!isLoggedIn()) window.location.href = "/pages/login.html";
+    renderNavbar();
+
+    function formatCard(el) {
+      el.value = el.value.replace(/\D/g,"").replace(/(.{4})/g,"$1 ").trim();
+    }
+    function formatExpiry(el) {
+      el.value = el.value.replace(/\D/g,"").replace(/^(\d{2})(\d)/,"$1/$2");
+    }
+
+    function renderSummary() {
+      const cart     = getCart();
+      const subtotal = parseFloat(getCartTotal());
+      const shipping = subtotal > 500 ? 0 : 9.99;
+      const tax      = subtotal * 0.08;
+      const total    = subtotal + shipping + tax;
+
+      document.getElementById("order-items").innerHTML = cart.map(i => `
+        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #f5f5f5;font-size:.9rem;">
+          <span>${i.name} × ${i.quantity}</span>
+          <span>$${(i.price * i.quantity).toFixed(2)}</span>
+        </div>`).join("");
+
+      document.getElementById("ck-subtotal").textContent = `$${subtotal.toFixed(2)}`;
+      document.getElementById("ck-shipping").textContent = shipping === 0 ? "FREE" : `$${shipping.toFixed(2)}`;
+      document.getElementById("ck-tax").textContent      = `$${tax.toFixed(2)}`;
+      document.getElementById("ck-total").textContent    = `$${total.toFixed(2)}`;
+    }
+
+    async function placeOrder() {
+      const fname   = document.getElementById("fname").value.trim();
+      const lname   = document.getElementById("lname").value.trim();
+      const street  = document.getElementById("street").value.trim();
+      const city    = document.getElementById("city").value.trim();
+      const zip     = document.getElementById("zip").value.trim();
+      const country = document.getElementById("country").value.trim();
+
+      if (!fname||!lname||!street||!city||!zip||!country) {
+        document.getElementById("alert-area").innerHTML =
+          '<div class="alert alert-error" style="display:block">Please fill in all shipping fields.</div>';
+        window.scrollTo({top:0,behavior:"smooth"});
+        return;
+      }
+
+      const shippingAddress = `${fname} ${lname}, ${street}, ${city} ${zip}, ${country}`;
+      const cart = getCart();
+      const items = cart.map(i => ({ productId: i.id, quantity: i.quantity }));
+
+      const btn = document.getElementById("btn-place");
+      btn.disabled = true;
+      btn.textContent = "Placing order…";
+
+      try {
+        const res  = await authFetch("/api/orders", {
+          method: "POST",
+          body: JSON.stringify({ items, shippingAddress }),
+        });
+        const data = await res.json();
+
+        if (data.error) {
+          document.getElementById("alert-area").innerHTML =
+            `<div class="alert alert-error" style="display:block">${data.error}</div>`;
+          btn.disabled = false;
+          btn.textContent = "🔒 Place Order Securely";
+        } else {
+          clearCart();
+          document.getElementById("success-modal").style.display = "flex";
+        }
+      } catch {
+        document.getElementById("alert-area").innerHTML =
+          '<div class="alert alert-error" style="display:block">Network error. Please try again.</div>';
+        btn.disabled = false;
+        btn.textContent = "🔒 Place Order Securely";
+      }
+    }
+
+    const cart = getCart();
+    if (!cart.length) window.location.href = "/pages/cart.html";
+    renderSummary();
+  </script>
+</body>
+</html>

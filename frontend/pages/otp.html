@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Verify OTP — SecureShop</title>
+  <link rel="stylesheet" href="/css/style.css"/>
+</head>
+<body>
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <div style="font-size:3rem;margin-bottom:8px;">📧</div>
+      <h2>Check Your <span>Email</span></h2>
+      <p>Enter the 6-digit OTP we sent you. It expires in 5 minutes.</p>
+    </div>
+
+    <div class="alert alert-error"   id="alert-error"></div>
+    <div class="alert alert-success" id="alert-success"></div>
+
+    <div class="form-group">
+      <label>One-Time Password (OTP)</label>
+      <input type="text" class="otp-input" id="otp"
+             maxlength="6" placeholder="000000"
+             inputmode="numeric" pattern="[0-9]*"/>
+    </div>
+
+    <!-- Countdown timer -->
+    <p style="text-align:center;color:#999;font-size:.9rem;margin-bottom:16px;">
+      Expires in: <strong id="countdown" style="color:#e94560;">5:00</strong>
+    </p>
+
+    <button class="btn-primary" id="btn-verify" onclick="handleVerify()">Verify OTP</button>
+
+    <p class="auth-link" style="margin-top:16px;">
+      Didn't receive it? <a href="/pages/login.html">Go back and try again</a>
+    </p>
+  </div>
+</div>
+
+<script src="/js/cart.js"></script>
+<script src="/js/api.js"></script>
+<script>
+  if (isLoggedIn()) window.location.href = "/";
+
+  // 5-minute countdown
+  let seconds = 300;
+  const timer = setInterval(() => {
+    seconds--;
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    const el = document.getElementById("countdown");
+    if (el) el.textContent = `${m}:${s.toString().padStart(2,"0")}`;
+    if (seconds <= 0) {
+      clearInterval(timer);
+      if (el) el.textContent = "Expired";
+      document.getElementById("btn-verify").disabled = true;
+      showAlert("alert-error", "OTP expired. Please log in again.");
+    }
+  }, 1000);
+
+  async function handleVerify() {
+    hideAlert("alert-error");
+    const otp = document.getElementById("otp").value.trim();
+    const btn = document.getElementById("btn-verify");
+
+    if (otp.length !== 6) return showAlert("alert-error", "Please enter the full 6-digit OTP.");
+
+    btn.disabled = true;
+    btn.textContent = "Verifying…";
+
+    const data = await apiVerifyOTP(otp);
+
+    if (data.error) {
+      showAlert("alert-error", data.error);
+      btn.disabled = false;
+      btn.textContent = "Verify OTP";
+    } else {
+      clearInterval(timer);
+      showAlert("alert-success", `Welcome back, ${data.user.name}! Redirecting…`);
+      setTimeout(() => {
+        window.location.href = data.user.role === "admin" ? "/pages/admin.html" : "/";
+      }, 1200);
+    }
+  }
+
+  // Auto-submit when 6 digits entered
+  document.getElementById("otp").addEventListener("input", function() {
+    if (this.value.length === 6) handleVerify();
+  });
+
+  document.addEventListener("keydown", e => { if (e.key === "Enter") handleVerify(); });
+</script>
+</body>
+</html>

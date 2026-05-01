@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SecureShop — Trusted Electronics Store</title>
+  <link rel="stylesheet" href="/css/style.css"/>
+</head>
+<body>
+
+  <!-- Top bar (mobile only) -->
+  <div id="navbar"></div>
+
+  <!-- ══════════════════════════════════════════════════════
+       ALL SCROLLABLE CONTENT goes inside #page-content
+       This div is animated, NOT the body.
+       Fixed elements (nav, chatbot) are outside this div.
+  ══════════════════════════════════════════════════════ -->
+  <div id="page-content">
+
+    <!-- Announcement Ticker -->
+    <div class="ticker-wrap">
+      <div class="ticker-track">
+        <span class="ticker-item">🔐 MFA-protected accounts <span class="sep">✦</span></span>
+        <span class="ticker-item">🚚 FREE shipping over $500 <span class="sep">✦</span></span>
+        <span class="ticker-item">🔒 256-bit SSL encryption <span class="sep">✦</span></span>
+        <span class="ticker-item">💳 Zero card data storage <span class="sep">✦</span></span>
+        <span class="ticker-item">📱 Latest iPhones in stock <span class="sep">✦</span></span>
+        <span class="ticker-item">🎧 Premium headphones sale <span class="sep">✦</span></span>
+        <span class="ticker-item">⌚ Apple Watch Series 9 available <span class="sep">✦</span></span>
+        <span class="ticker-item">💻 MacBook Air M3 — limited stock! <span class="sep">✦</span></span>
+        <!-- Duplicate for seamless loop -->
+        <span class="ticker-item">🔐 MFA-protected accounts <span class="sep">✦</span></span>
+        <span class="ticker-item">🚚 FREE shipping over $500 <span class="sep">✦</span></span>
+        <span class="ticker-item">🔒 256-bit SSL encryption <span class="sep">✦</span></span>
+        <span class="ticker-item">💳 Zero card data storage <span class="sep">✦</span></span>
+        <span class="ticker-item">📱 Latest iPhones in stock <span class="sep">✦</span></span>
+        <span class="ticker-item">🎧 Premium headphones sale <span class="sep">✦</span></span>
+        <span class="ticker-item">⌚ Apple Watch Series 9 available <span class="sep">✦</span></span>
+        <span class="ticker-item">💻 MacBook Air M3 — limited stock! <span class="sep">✦</span></span>
+      </div>
+    </div>
+
+    <!-- Hero -->
+    <section class="hero">
+      <div class="hero-eyebrow"><span class="dot"></span> New arrivals just dropped</div>
+      <h1>The future of<br/><em>secure shopping.</em></h1>
+      <p>Premium electronics with military-grade account protection. Shop confidently, always.</p>
+      <div class="hero-cta">
+        <a href="/pages/products.html" class="btn-hero">Browse Products →</a>
+        <a href="/pages/register.html" class="btn-hero-ghost">Create Account</a>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat"><div class="val">500+</div><div class="lbl">Products</div></div>
+        <div class="hero-stat"><div class="val">10k+</div><div class="lbl">Customers</div></div>
+        <div class="hero-stat"><div class="val">4.9★</div><div class="lbl">Rating</div></div>
+        <div class="hero-stat"><div class="val">256‑bit</div><div class="lbl">Encryption</div></div>
+      </div>
+    </section>
+
+    <!-- Trust badges -->
+    <div class="trust-row reveal">
+      <div class="trust-badge"><span class="trust-icon">🔐</span> MFA Login</div>
+      <div class="trust-badge"><span class="trust-icon">🔒</span> SSL Encrypted</div>
+      <div class="trust-badge"><span class="trust-icon">🚚</span> Free Shipping $500+</div>
+      <div class="trust-badge"><span class="trust-icon">💳</span> Zero Card Storage</div>
+      <div class="trust-badge"><span class="trust-icon">🔄</span> 30-Day Returns</div>
+    </div>
+
+    <!-- Category Chips -->
+    <div class="category-chips">
+      <a href="/pages/products.html" class="cat-chip reveal reveal-delay-1"><span>📱</span> Smartphones</a>
+      <a href="/pages/products.html" class="cat-chip reveal reveal-delay-2"><span>💻</span> Laptops</a>
+      <a href="/pages/products.html" class="cat-chip reveal reveal-delay-3"><span>🎧</span> Headphones</a>
+      <a href="/pages/products.html" class="cat-chip reveal reveal-delay-4"><span>⌚</span> Smartwatches</a>
+      <a href="/pages/products.html" class="cat-chip reveal reveal-delay-5"><span>📟</span> Tablets</a>
+    </div>
+
+    <!-- Features Strip -->
+    <section class="features-strip">
+      <div class="features-grid">
+        <div class="feat-item reveal reveal-delay-1">
+          <div class="feat-icon">🔐</div>
+          <div class="feat-title">MFA Protected</div>
+          <div class="feat-desc">Two-factor OTP login keeps your account locked tight from unauthorized access.</div>
+        </div>
+        <div class="feat-item reveal reveal-delay-2">
+          <div class="feat-icon">💳</div>
+          <div class="feat-title">Secure Payments</div>
+          <div class="feat-desc">PCI-DSS compliant checkout. We never store your card details on our servers.</div>
+        </div>
+        <div class="feat-item reveal reveal-delay-3">
+          <div class="feat-icon">🔒</div>
+          <div class="feat-title">Encrypted Data</div>
+          <div class="feat-desc">256-bit SSL/TLS everywhere. Passwords hashed with bcrypt — never stored plain.</div>
+        </div>
+        <div class="feat-item reveal reveal-delay-4">
+          <div class="feat-icon">🚚</div>
+          <div class="feat-title">Fast Delivery</div>
+          <div class="feat-desc">Free shipping on orders over $500. Delivered to your door in 3–5 business days.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Promo Banner -->
+    <div class="section" style="padding-bottom:0;">
+      <div class="container">
+        <div class="promo-banner reveal">
+          <div class="promo-content">
+            <p style="color:rgba(255,255,255,.55);font-size:.8rem;font-weight:600;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px;">🔥 Limited Time</p>
+            <h2>FREE Shipping<br/>on orders over <span style="color:var(--accent);">$500</span></h2>
+            <p>Shop our premium electronics collection and save on delivery.</p>
+            <a href="/pages/products.html" class="btn-hero" style="margin-top:8px;">Shop Now →</a>
+          </div>
+          <div class="promo-emoji">🛍️</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Featured Products -->
+    <section class="section">
+      <div class="container">
+        <div class="section-header reveal">
+          <div>
+            <h2 class="section-title">Featured Products</h2>
+            <p class="section-sub">Hand-picked from our electronics collection</p>
+          </div>
+          <a href="/pages/products.html" class="section-link">View all →</a>
+        </div>
+        <div class="scroll-row" id="featured-grid">
+          <!-- Skeletons -->
+          <div style="min-width:220px;border-radius:18px;overflow:hidden;border:1px solid #e8e8e8;flex-shrink:0;">
+            <div class="skeleton" style="height:165px;border-radius:0;"></div>
+            <div style="padding:14px;"><div class="skeleton" style="height:9px;width:35%;margin-bottom:9px;"></div><div class="skeleton" style="height:13px;width:80%;margin-bottom:7px;"></div><div class="skeleton" style="height:36px;border-radius:999px;margin-top:14px;"></div></div>
+          </div>
+          <div style="min-width:220px;border-radius:18px;overflow:hidden;border:1px solid #e8e8e8;flex-shrink:0;">
+            <div class="skeleton" style="height:165px;border-radius:0;"></div>
+            <div style="padding:14px;"><div class="skeleton" style="height:9px;width:40%;margin-bottom:9px;"></div><div class="skeleton" style="height:13px;width:70%;margin-bottom:7px;"></div><div class="skeleton" style="height:36px;border-radius:999px;margin-top:14px;"></div></div>
+          </div>
+          <div style="min-width:220px;border-radius:18px;overflow:hidden;border:1px solid #e8e8e8;flex-shrink:0;">
+            <div class="skeleton" style="height:165px;border-radius:0;"></div>
+            <div style="padding:14px;"><div class="skeleton" style="height:9px;width:30%;margin-bottom:9px;"></div><div class="skeleton" style="height:13px;width:85%;margin-bottom:7px;"></div><div class="skeleton" style="height:36px;border-radius:999px;margin-top:14px;"></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="section" style="background:var(--bg-2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);">
+      <div class="container">
+        <div class="section-header reveal">
+          <div>
+            <h2 class="section-title">How It Works</h2>
+            <p class="section-sub">Shop securely in 4 simple steps</p>
+          </div>
+        </div>
+        <div class="how-grid">
+          <div class="how-step reveal reveal-delay-1">
+            <div class="how-num">1</div>
+            <div class="how-title">Create Account</div>
+            <div class="how-desc">Sign up with your email and create a strong password in under 2 minutes.</div>
+          </div>
+          <div class="how-step reveal reveal-delay-2">
+            <div class="how-num">2</div>
+            <div class="how-title">Verify Login</div>
+            <div class="how-desc">Every login is secured with a one-time OTP sent to your email. No one else can get in.</div>
+          </div>
+          <div class="how-step reveal reveal-delay-3">
+            <div class="how-num">3</div>
+            <div class="how-title">Browse & Add</div>
+            <div class="how-desc">Explore our premium electronics catalog. Filter by category, price, and availability.</div>
+          </div>
+          <div class="how-step reveal reveal-delay-4">
+            <div class="how-num">4</div>
+            <div class="how-title">Checkout Safely</div>
+            <div class="how-desc">Complete your order with our encrypted checkout. No card data is ever stored.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- New Arrivals Grid -->
+    <section class="section">
+      <div class="container">
+        <div class="section-header reveal">
+          <div>
+            <h2 class="section-title">New Arrivals</h2>
+            <p class="section-sub">Just landed this week</p>
+          </div>
+          <a href="/pages/products.html" class="section-link">Shop all →</a>
+        </div>
+        <div class="product-grid" id="new-grid">
+          <div class="spinner"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="section" style="background:var(--bg-2);border-top:1px solid var(--border);">
+      <div class="container">
+        <div class="section-header reveal">
+          <div>
+            <h2 class="section-title">What Customers Say</h2>
+            <p class="section-sub">Thousands of happy shoppers</p>
+          </div>
+        </div>
+        <div class="testimonials-grid">
+          <div class="testi-card reveal reveal-delay-1">
+            <div class="testi-stars">★★★★★</div>
+            <p class="testi-text">The OTP login is brilliant — I feel so much more secure knowing my account is protected even if someone gets my password. Love the clean UI too!</p>
+            <div class="testi-author">
+              <div class="testi-av" style="background:#8b5cf6;">A</div>
+              <div><div class="testi-name">Ahmad K.</div><div class="testi-loc">Verified Buyer</div></div>
+            </div>
+          </div>
+          <div class="testi-card reveal reveal-delay-2">
+            <div class="testi-stars">★★★★★</div>
+            <p class="testi-text">Got my Sony headphones in just 4 days! Packaging was great, product is exactly as described. The checkout was super smooth and I trusted the site instantly.</p>
+            <div class="testi-author">
+              <div class="testi-av" style="background:#e94560;">S</div>
+              <div><div class="testi-name">Sarah M.</div><div class="testi-loc">Verified Buyer</div></div>
+            </div>
+          </div>
+          <div class="testi-card reveal reveal-delay-3">
+            <div class="testi-stars">★★★★★</div>
+            <p class="testi-text">As a security professional, I appreciate how seriously SecureShop takes data protection. bcrypt, JWT, MFA — this is how every e-commerce site should be built.</p>
+            <div class="testi-author">
+              <div class="testi-av" style="background:#16a34a;">R</div>
+              <div><div class="testi-name">Reza T.</div><div class="testi-loc">Security Engineer</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Newsletter -->
+    <section class="section">
+      <div class="container">
+        <div class="newsletter-box reveal">
+          <div style="font-size:2.5rem;margin-bottom:12px;">📬</div>
+          <h3>Stay in the Loop</h3>
+          <p>Get notified about new arrivals, exclusive deals, and restock alerts.</p>
+          <div class="newsletter-form">
+            <input type="email" class="newsletter-inp" placeholder="Enter your email address…"/>
+            <button class="newsletter-btn" onclick="showToast('Subscribed! ✓ We will notify you about deals.','success')">Subscribe</button>
+          </div>
+          <p style="font-size:.72rem;color:var(--text-3);margin-top:12px;">No spam, ever. Unsubscribe anytime.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Banner -->
+    <div class="container">
+      <div class="cta-banner reveal">
+        <h2>Shop with total <em class="gradient-text">confidence.</em></h2>
+        <p>Your account, data, and payments are protected end-to-end.</p>
+        <a href="/pages/register.html" class="btn-hero">Get Started Free →</a>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <div class="footer-logo">Secure<span>Shop</span></div>
+            <p>Premium electronics with military-grade security. Your safety is our top priority — always.</p>
+          </div>
+          <div class="footer-col">
+            <h4>Shop</h4>
+            <ul>
+              <li><a href="/pages/products.html">All Products</a></li>
+              <li><a href="/pages/products.html">Smartphones</a></li>
+              <li><a href="/pages/products.html">Laptops</a></li>
+              <li><a href="/pages/products.html">Headphones</a></li>
+              <li><a href="/pages/products.html">Smartwatches</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h4>Account</h4>
+            <ul>
+              <li><a href="/pages/login.html">Sign In</a></li>
+              <li><a href="/pages/register.html">Register</a></li>
+              <li><a href="/pages/orders.html">My Orders</a></li>
+              <li><a href="/pages/cart.html">Shopping Cart</a></li>
+              <li><a href="/pages/forgot-password.html">Reset Password</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h4>Support</h4>
+            <ul>
+              <li><a href="mailto:sugamthapa@my.unt.edu">Contact Us</a></li>
+              <li><a href="#">Shipping Info</a></li>
+              <li><a href="#">Return Policy</a></li>
+              <li><a href="#">Privacy Policy</a></li>
+              <li><a href="#">Security Info</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>© 2026 <span>SecureShop</span> — Trusted Electronics Store</p>
+          <div class="footer-badges">
+            <span class="footer-badge">🔒 SSL</span>
+            <span class="footer-badge">🔐 MFA</span>
+            <span class="footer-badge">💳 PCI-DSS</span>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+  </div><!-- end #page-content -->
+
+  <script src="/js/cart.js"></script>
+  <script src="/js/api.js"></script>
+  <script>
+    renderNavbar(); // ← appends nav to body, OUTSIDE page-content
+
+    // Scroll reveal observer
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add("visible"); obs.unobserve(e.target); }
+      });
+    }, { threshold: 0.1 });
+    document.querySelectorAll(".reveal, .reveal-left, .reveal-right").forEach(el => obs.observe(el));
+
+    // Ripple on cart buttons
+    document.addEventListener("click", e => {
+      const btn = e.target.closest(".btn-add");
+      if (!btn || btn.disabled) return;
+      const r = document.createElement("span");
+      const rect = btn.getBoundingClientRect();
+      const size = Math.max(rect.width, rect.height);
+      r.className = "ripple";
+      r.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX-rect.left-size/2}px;top:${e.clientY-rect.top-size/2}px;`;
+      btn.appendChild(r);
+      setTimeout(() => r.remove(), 550);
+    });
+
+    function cardHTML(p, i) {
+      return `<div class="product-card reveal reveal-delay-${(i%4)+1}" onclick="goToShop()">
+        <div class="product-card-img">
+          <img src="${p.image_url||'https://placehold.co/400x300/f8f8f8/aaaaaa?text=No+Image'}" alt="${p.name}" loading="lazy"/>
+          ${p.stock<=5&&p.stock>0?`<span class="card-badge low">Only ${p.stock} left</span>`:""}
+          ${p.stock===0?`<span class="card-badge">Out of Stock</span>`:""}
+          <button class="card-wish" onclick="event.stopPropagation();showToast('Added to wishlist ♥','success')">♥</button>
+        </div>
+        <div class="card-body">
+          <span class="category">${p.category}</span>
+          <h3>${p.name}</h3>
+          <p class="desc">${p.description?p.description.slice(0,80)+"…":""}</p>
+          <div class="card-footer">
+            <span class="price">$${parseFloat(p.price).toFixed(2)}</span>
+            <span class="stock-badge ${p.stock>5?"stock-in":p.stock>0?"stock-low":"stock-out"}">
+              ${p.stock>5?"● In Stock":p.stock>0?`● ${p.stock} left`:"● Out"}
+            </span>
+          </div>
+          <button class="btn-add" ${p.stock===0?"disabled":""}
+            onclick="event.stopPropagation();addToCart({id:${p.id},name:'${p.name.replace(/'/g,"\\'")}',price:${p.price},image_url:'${p.image_url||""}'}); showToast('${p.name.slice(0,20)}… added ✓','success'); renderNavbar();">
+            🛒 Add to Cart
+          </button>
+        </div>
+      </div>`;
+    }
+
+    function goToShop() { navigateTo("/pages/products.html"); }
+
+    async function loadHome() {
+      try {
+        const res = await fetch("/api/products");
+        const all = await res.json();
+        if (!all.length) {
+          document.getElementById("featured-grid").innerHTML = '<p style="color:var(--text-3);padding:20px;">No products yet. Add some from the Admin panel!</p>';
+          document.getElementById("new-grid").innerHTML = '<p style="color:var(--text-3);">No products yet.</p>';
+          return;
+        }
+
+        // Featured: first 6 in horizontal scroll row
+        const fg = document.getElementById("featured-grid");
+        fg.innerHTML = all.slice(0,6).map((p,i) =>
+          `<div style="min-width:220px;flex-shrink:0;">${cardHTML(p,i)}</div>`
+        ).join("");
+
+        // New arrivals: next 4 in grid
+        const ng = document.getElementById("new-grid");
+        ng.innerHTML = all.slice(0,4).map((p,i) => cardHTML(p,i)).join("");
+
+        // Observe new cards for scroll reveal
+        document.querySelectorAll(".product-card.reveal").forEach(el => obs.observe(el));
+
+      } catch(e) { console.error("Failed to load products:", e); }
+    }
+
+    loadHome();
+  </script>
+</body>
+</html>

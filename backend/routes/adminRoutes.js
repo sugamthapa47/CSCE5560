@@ -1,0 +1,12 @@
+const express = require("express");
+const r = express.Router();
+const a = require("../controllers/adminController");
+const { protect, restrictTo } = require("../middleware/authMiddleware");
+r.use(protect, restrictTo("admin"));
+r.get("/orders",                a.getAllOrders);
+r.patch("/orders/:id/status",   a.updateOrderStatus);
+r.get("/users",                 a.getAllUsers);
+r.post("/products",             a.addProduct);
+r.put("/products/:id",          a.updateProduct);
+r.delete("/products/:id",       a.deleteProduct);
+module.exports = r;

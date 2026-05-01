@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cart — SecureShop</title>
+  <link rel="stylesheet" href="/css/style.css"/>
+</head>
+<body>
+  <div id="navbar"></div>
+
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title">Shopping Cart</h2>
+      <p class="section-subtitle" id="cart-subtitle"></p>
+
+      <div id="cart-empty" class="empty-state hidden">
+        <div class="icon">🛒</div>
+        <p style="font-size:1.1rem;margin-bottom:16px;">Your cart is empty</p>
+        <a href="/pages/products.html" class="btn-hero">Start Shopping</a>
+      </div>
+
+      <div id="cart-content">
+        <div style="overflow-x:auto;">
+          <table class="cart-table">
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Subtotal</th>
+                <th>Remove</th>
+              </tr>
+            </thead>
+            <tbody id="cart-body"></tbody>
+          </table>
+        </div>
+
+        <div class="cart-summary">
+          <h3>Order Summary</h3>
+          <div class="total-row"><span>Subtotal</span><span id="subtotal">$0.00</span></div>
+          <div class="total-row"><span>Shipping</span><span id="shipping">$0.00</span></div>
+          <div class="total-row"><span>Tax (8%)</span><span id="tax">$0.00</span></div>
+          <div class="total-row grand"><span>Total</span><span id="grand-total">$0.00</span></div>
+          <button class="btn-primary" style="margin-top:20px;" onclick="goCheckout()">
+            Proceed to Checkout →
+          </button>
+          <a href="/pages/products.html" style="display:block;text-align:center;margin-top:12px;color:#777;font-size:.9rem;">
+            ← Continue Shopping
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>© 2025 <span>SecureShop</span></p>
+  </footer>
+
+  <script src="/js/cart.js"></script>
+  <script src="/js/api.js"></script>
+  <script>
+    renderNavbar();
+
+    function renderCart() {
+      const cart = getCart();
+      const empty   = document.getElementById("cart-empty");
+      const content = document.getElementById("cart-content");
+
+      if (!cart.length) {
+        empty.classList.remove("hidden");
+        content.classList.add("hidden");
+        return;
+      }
+
+      empty.classList.add("hidden");
+      content.classList.remove("hidden");
+
+      document.getElementById("cart-subtitle").textContent = `${getCartCount()} item(s) in your cart`;
+
+      const tbody = document.getElementById("cart-body");
+      tbody.innerHTML = cart.map(item => `
+        <tr id="row-${item.id}">
+          <td><img src="${item.image_url || 'https://via.placeholder.com/64?text=?'}" alt="${item.name}"/></td>
+          <td><strong>${item.name}</strong></td>
+          <td>$${parseFloat(item.price).toFixed(2)}</td>
+          <td>
+            <input class="qty-input" type="number" min="1" value="${item.quantity}"
+              onchange="updateQty(${item.id}, this.value)"/>
+          </td>
+          <td><strong>$${(item.price * item.quantity).toFixed(2)}</strong></td>
+          <td>
+            <button class="btn-remove" onclick="removeItem(${item.id})" title="Remove">🗑️</button>
+          </td>
+        </tr>`).join("");
+
+      const subtotal = parseFloat(getCartTotal());
+      const shipping = subtotal > 500 ? 0 : 9.99;
+      const tax      = subtotal * 0.08;
+      const grand    = subtotal + shipping + tax;
+
+      document.getElementById("subtotal").textContent   = `$${subtotal.toFixed(2)}`;
+      document.getElementById("shipping").textContent   = shipping === 0 ? "FREE" : `$${shipping.toFixed(2)}`;
+      document.getElementById("tax").textContent        = `$${tax.toFixed(2)}`;
+      document.getElementById("grand-total").textContent = `$${grand.toFixed(2)}`;
+    }
+
+    function updateQty(id, qty) {
+      updateQuantity(id, qty);
+      renderCart();
+      renderNavbar();
+    }
+
+    function removeItem(id) {
+      removeFromCart(id);
+      renderCart();
+      renderNavbar();
+    }
+
+    function goCheckout() {
+      if (!isLoggedIn()) {
+        showToast("Please login to checkout");
+        setTimeout(() => window.location.href = "/pages/login.html", 1200);
+        return;
+      }
+      window.location.href = "/pages/checkout.html";
+    }
+
+    renderCart();
+  </script>
+</body>
+</html>

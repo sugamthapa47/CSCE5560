@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Dashboard — SecureShop</title>
+  <link rel="stylesheet" href="/css/style.css"/>
+  <style>
+    textarea.media-textarea {
+      width: 100%; padding: 12px 16px;
+      border: 1.5px solid #e5e5e5; border-radius: 14px;
+      font-size: .9rem; resize: vertical;
+      font-family: inherit; color: #0a0a0a;
+      background: #f7f7f7; transition: all .2s;
+      line-height: 1.6;
+    }
+    textarea.media-textarea:focus {
+      outline: none; border-color: #0a0a0a;
+      background: white; box-shadow: 0 0 0 3px rgba(0,0,0,.05);
+    }
+    .media-hint {
+      font-size: .75rem; color: #a3a3a3;
+      margin-top: 5px; display: block; line-height: 1.5;
+    }
+    .media-preview {
+      display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px;
+    }
+    .media-preview-item {
+      width: 72px; height: 72px; border-radius: 10px;
+      overflow: hidden; border: 1.5px solid #e5e5e5;
+      position: relative; cursor: pointer;
+      transition: all .2s;
+    }
+    .media-preview-item:hover { border-color: #e94560; }
+    .media-preview-item img {
+      width: 100%; height: 100%; object-fit: cover;
+    }
+    .media-preview-item .del-btn {
+      position: absolute; top: 2px; right: 2px;
+      background: #e94560; color: white;
+      border: none; border-radius: 50%;
+      width: 18px; height: 18px; font-size: .65rem;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; opacity: 0; transition: opacity .2s;
+    }
+    .media-preview-item:hover .del-btn { opacity: 1; }
+    .video-badge {
+      position: absolute; inset: 0;
+      background: rgba(0,0,0,.5);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem;
+    }
+    .product-media-cell {
+      display: flex; gap: 4px; align-items: center; flex-wrap: wrap;
+    }
+    .product-media-cell img {
+      width: 36px; height: 36px; object-fit: cover;
+      border-radius: 6px; border: 1px solid #e5e5e5;
+    }
+    .media-count-badge {
+      font-size: .7rem; background: #f7f7f7;
+      border: 1px solid #e5e5e5; border-radius: 20px;
+      padding: 2px 7px; color: #525252; font-weight: 600;
+    }
+    .toast-container {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+      z-index: 9999; display: flex; flex-direction: column;
+      align-items: center; gap: 10px; pointer-events: none;
+    }
+    @keyframes toastIn  { from { opacity:0; transform:translateY(16px) scale(.95); } to { opacity:1; transform:translateY(0) scale(1); } }
+    @keyframes toastOut { from { opacity:1; } to { opacity:0; transform:translateY(16px); } }
+    .toast {
+      background: #0a0a0a; color: white;
+      padding: 11px 22px; border-radius: 999px;
+      font-size: .875rem; font-weight: 500;
+      box-shadow: 0 8px 32px rgba(0,0,0,.18);
+      animation: toastIn .3s ease both;
+      pointer-events: all;
+    }
+    .toast.success { background: #16a34a; }
+    .toast.error   { background: #dc2626; }
+    .toast.hiding  { animation: toastOut .3s ease forwards; }
+  </style>
+</head>
+<body>
+<div class="admin-layout">
+
+  <!-- Sidebar -->
+  <aside class="admin-sidebar">
+    <div class="sidebar-logo">⚙️ Admin<span>Panel</span></div>
+    <nav>
+      <a href="#" class="active" onclick="showTab('dashboard')">📊 Dashboard</a>
+      <a href="#" onclick="showTab('orders')">📦 Orders</a>
+      <a href="#" onclick="showTab('products')">🛍️ Products</a>
+      <a href="#" onclick="showTab('users')">👥 Users</a>
+      <a href="/">🏠 Back to Store</a>
+      <a href="#" onclick="logout()" style="color:#e94560;margin-top:auto;">🚪 Logout</a>
+    </nav>
+  </aside>
+
+  <!-- Main -->
+  <main class="admin-main">
+    <div class="admin-header">
+      <h1 id="tab-title">Dashboard</h1>
+      <p id="tab-sub">Welcome back, <strong id="admin-name"></strong></p>
+    </div>
+
+    <!-- ── Dashboard Tab ── -->
+    <div id="tab-dashboard">
+      <div class="stats-grid" id="stats-grid">
+        <div class="stat-card"><div class="stat-value" id="stat-orders">—</div><div class="stat-label">Total Orders</div></div>
+        <div class="stat-card"><div class="stat-value" id="stat-revenue">—</div><div class="stat-label">Total Revenue</div></div>
+        <div class="stat-card"><div class="stat-value" id="stat-products">—</div><div class="stat-label">Products</div></div>
+        <div class="stat-card"><div class="stat-value" id="stat-users">—</div><div class="stat-label">Registered Users</div></div>
+      </div>
+      <div class="card-box">
+        <h3>Recent Orders</h3>
+        <div id="recent-orders"><div class="spinner"></div></div>
+      </div>
+    </div>
+
+    <!-- ── Orders Tab ── -->
+    <div id="tab-orders" class="hidden">
+      <div style="overflow-x:auto;">
+        <table class="data-table">
+          <thead><tr><th>#</th><th>Customer</th><th>Amount</th><th>Date</th><th>Status</th><th>Update</th></tr></thead>
+          <tbody id="orders-body">
+            <tr><td colspan="6" style="text-align:center;padding:24px;"><div class="spinner" style="margin:0 auto;width:28px;height:28px;"></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── Products Tab ── -->
+    <div id="tab-products" class="hidden">
+      <div class="card-box" style="margin-bottom:24px;">
+        <h3>➕ Add New Product</h3>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Product Name</label>
+            <input type="text" id="p-name" placeholder="e.g. iPhone 15 Pro"/>
+          </div>
+          <div class="form-group">
+            <label>Category</label>
+            <select id="p-cat" style="width:100%;padding:12px 16px;border:1.5px solid #e5e5e5;border-radius:14px;font-size:.95rem;background:#f7f7f7;">
+              <option>Smartphones</option>
+              <option>Laptops</option>
+              <option>Headphones</option>
+              <option>Smartwatches</option>
+              <option>Tablets</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Description</label>
+          <input type="text" id="p-desc" placeholder="Short product description…"/>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Price ($)</label>
+            <input type="number" id="p-price" placeholder="999.99" step="0.01" min="0"/>
+          </div>
+          <div class="form-group">
+            <label>Stock</label>
+            <input type="number" id="p-stock" placeholder="50" min="0"/>
+          </div>
+        </div>
+
+        <!-- Main Image -->
+        <div class="form-group">
+          <label>Main Image URL</label>
+          <input type="url" id="p-img" placeholder="https://example.com/main-image.jpg"/>
+          <span class="media-hint">This is the first image shown on product cards.</span>
+        </div>
+
+        <!-- Extra Images -->
+        <div class="form-group">
+          <label>Extra Images (one URL per line)</label>
+          <textarea class="media-textarea" id="p-extra-imgs" rows="4"
+            placeholder="https://example.com/image2.jpg&#10;https://example.com/image3.jpg&#10;https://example.com/image4.jpg&#10;https://example.com/image5.jpg"
+            oninput="previewExtraImages()"></textarea>
+          <span class="media-hint">Add up to 10 extra images. Each image URL on a new line. Users can browse all images in a gallery on the product page.</span>
+          <div class="media-preview" id="extra-img-preview"></div>
+        </div>
+
+        <!-- Video -->
+        <div class="form-group">
+          <label>Product Video URL (optional)</label>
+          <input type="url" id="p-video"
+            placeholder="https://www.youtube.com/embed/VIDEO_ID"
+            oninput="previewVideo()"/>
+          <span class="media-hint">
+            For YouTube: go to the video → Share → Embed → copy the URL inside src="…" (looks like youtube.com/embed/VIDEO_ID)<br/>
+            For MP4: paste a direct .mp4 link.
+          </span>
+          <div id="video-preview" style="margin-top:10px;display:none;">
+            <iframe id="video-frame" width="280" height="160"
+              style="border-radius:12px;border:none;" allowfullscreen></iframe>
+          </div>
+        </div>
+
+        <button class="btn-primary" style="max-width:200px;border-radius:999px;" onclick="addProduct()">
+          ➕ Add Product
+        </button>
+        <div id="p-alert" class="alert" style="margin-top:14px;max-width:460px;"></div>
+      </div>
+
+      <!-- Products Table -->
+      <div style="overflow-x:auto;">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Image</th>
+              <th>Name</th>
+              <th>Category</th>
+              <th>Price</th>
+              <th>Stock</th>
+              <th>Media</th>
+              <th>Delete</th>
+            </tr>
+          </thead>
+          <tbody id="products-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── Users Tab ── -->
+    <div id="tab-users" class="hidden">
+      <div style="overflow-x:auto;">
+        <table class="data-table">
+          <thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Role</th><th>Joined</th></tr></thead>
+          <tbody id="users-body">
+            <tr><td colspan="5" style="text-align:center;padding:24px;">Loading…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- Toast -->
+<div class="toast-container" id="toast-container"></div>
+
+<script src="/js/cart.js"></script>
+<script src="/js/api.js"></script>
+<script>
+  if (!isLoggedIn() || !isAdmin()) window.location.href = "/pages/login.html";
+
+  const user = getUser();
+  if (user) document.getElementById("admin-name").textContent = user.name;
+
+  let currentTab = "dashboard";
+
+  // ── Toast ─────────────────────────────────────────────────
+  function showToast(msg, type = "") {
+    const c = document.getElementById("toast-container");
+    const t = document.createElement("div");
+    t.className = `toast ${type}`;
+    t.textContent = msg;
+    c.appendChild(t);
+    setTimeout(() => { t.classList.add("hiding"); setTimeout(() => t.remove(), 300); }, 2800);
+  }
+
+  // ── Tab switching ─────────────────────────────────────────
+  function showTab(tab) {
+    ["dashboard","orders","products","users"].forEach(t => {
+      document.getElementById(`tab-${t}`).classList.add("hidden");
+    });
+    document.getElementById(`tab-${tab}`).classList.remove("hidden");
+    document.querySelectorAll(".admin-sidebar nav a").forEach(a => a.classList.remove("active"));
+    event.target.classList.add("active");
+    const titles = { dashboard:"Dashboard", orders:"Orders", products:"Products", users:"Users" };
+    document.getElementById("tab-title").textContent = titles[tab];
+    currentTab = tab;
+    if (tab === "orders")   loadOrders();
+    if (tab === "products") loadProducts();
+    if (tab === "users")    loadUsers();
+  }
+
+  // ── Preview extra images while typing ────────────────────
+  function previewExtraImages() {
+    const urls = document.getElementById("p-extra-imgs").value
+      .split("\n").map(u => u.trim()).filter(u => u.startsWith("http"));
+    const preview = document.getElementById("extra-img-preview");
+    preview.innerHTML = urls.map(url => `
+      <div class="media-preview-item">
+        <img src="${url}" onerror="this.src='https://placehold.co/72x72?text=?'" />
+      </div>`).join("");
+  }
+
+  // ── Preview video while typing ────────────────────────────
+  function previewVideo() {
+    const url = document.getElementById("p-video").value.trim();
+    const box  = document.getElementById("video-preview");
+    const frame = document.getElementById("video-frame");
+    if (url) {
+      frame.src = url;
+      box.style.display = "block";
+    } else {
+      box.style.display = "none";
+      frame.src = "";
+    }
+  }
+
+  // ── Dashboard ─────────────────────────────────────────────
+  async function loadDashboard() {
+    try {
+      const [ordersRes, productsRes, usersRes] = await Promise.all([
+        authFetch("/api/admin/orders"),
+        fetch("/api/products"),
+        authFetch("/api/admin/users"),
+      ]);
+      const orders   = await ordersRes.json();
+      const products = await productsRes.json();
+      const users    = await usersRes.json();
+
+      const revenue = orders.reduce((s, o) => s + parseFloat(o.total_amount), 0);
+      document.getElementById("stat-orders").textContent   = orders.length;
+      document.getElementById("stat-revenue").textContent  = `$${revenue.toFixed(0)}`;
+      document.getElementById("stat-products").textContent = products.length;
+      document.getElementById("stat-users").textContent    = users.length;
+
+      const recent = orders.slice(0, 5);
+      document.getElementById("recent-orders").innerHTML = recent.length
+        ? `<table class="data-table" style="margin-top:16px;">
+            <thead><tr><th>#</th><th>Customer</th><th>Amount</th><th>Status</th></tr></thead>
+            <tbody>${recent.map(o => `
+              <tr>
+                <td>#${o.id}</td>
+                <td>${o.customer}</td>
+                <td>$${parseFloat(o.total_amount).toFixed(2)}</td>
+                <td><span class="badge badge-${o.status}">${o.status}</span></td>
+              </tr>`).join("")}
+            </tbody></table>`
+        : '<p style="color:#999;padding:16px 0;">No orders yet.</p>';
+    } catch { console.error("Dashboard load failed"); }
+  }
+
+  // ── Orders ────────────────────────────────────────────────
+  async function loadOrders() {
+    const tbody = document.getElementById("orders-body");
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:24px;"><div class="spinner" style="margin:0 auto;width:28px;height:28px;"></div></td></tr>`;
+    const res    = await authFetch("/api/admin/orders");
+    const orders = await res.json();
+    tbody.innerHTML = orders.length ? orders.map(o => `
+      <tr>
+        <td>#${o.id}</td>
+        <td>${o.customer}<br/><small style="color:#999;">${o.email}</small></td>
+        <td>$${parseFloat(o.total_amount).toFixed(2)}</td>
+        <td>${new Date(o.created_at).toLocaleDateString()}</td>
+        <td><span class="badge badge-${o.status}">${o.status}</span></td>
+        <td>
+          <select class="status-select" onchange="updateStatus(${o.id}, this.value)">
+            ${["pending","paid","shipped","delivered","cancelled"].map(s =>
+              `<option value="${s}" ${s===o.status?"selected":""}>${s}</option>`).join("")}
+          </select>
+        </td>
+      </tr>`).join("")
+    : `<tr><td colspan="6" style="text-align:center;padding:24px;color:#999;">No orders yet.</td></tr>`;
+  }
+
+  async function updateStatus(id, status) {
+    await authFetch(`/api/admin/orders/${id}/status`, {
+      method: "PATCH", body: JSON.stringify({ status })
+    });
+    showToast(`Order #${id} → "${status}"`, "success");
+  }
+
+  // ── Products ──────────────────────────────────────────────
+  async function loadProducts() {
+  const tbody = document.getElementById("products-body");
+  tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:24px;">
+    <div class="spinner" style="margin:0 auto;width:28px;height:28px;"></div>
+  </td></tr>`;
+
+  try {
+    const res  = await fetch("/api/products");
+    const data = await res.json();
+
+    if (!data.length) {
+      tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:24px;color:#a3a3a3;">No products yet.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = data.map(p => `
+      <tr>
+        <td>#${p.id}</td>
+        <td>
+          <img src="${p.image_url || 'https://placehold.co/48x48?text=?'}"
+            style="width:48px;height:48px;object-fit:cover;border-radius:8px;border:1px solid #e5e5e5;"
+            onerror="this.src='https://placehold.co/48x48?text=?'"/>
+        </td>
+        <td><strong>${p.name}</strong></td>
+        <td>${p.category}</td>
+        <td>$${parseFloat(p.price).toFixed(2)}</td>
+        <td>${p.stock}</td>
+        <td>
+          <button class="btn-sm" style="background:#f0f0f0;color:#525252;"
+            onclick="viewMedia(${p.id})">📷 Media</button>
+        </td>
+        <td>
+          <button class="btn-sm btn-danger" onclick="deleteProduct(${p.id})">Delete</button>
+        </td>
+      </tr>`).join("");
+
+  } catch(err) {
+    tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:24px;color:red;">
+      Failed to load: ${err.message}
+    </td></tr>`;
+  }
+}
+
+async function viewMedia(productId) {
+  try {
+    const res   = await fetch(`/api/media/${productId}`);
+    const media = await res.json();
+    if (!media.length) { alert("No extra media added for this product."); return; }
+    const list = media.map(m => `${m.type.toUpperCase()}: ${m.url}`).join("\n");
+    alert(`Media for product #${productId}:\n\n${list}`);
+  } catch {
+    alert("Failed to load media.");
+  }
+}
+
+async function addProduct() {
+  const al    = document.getElementById("p-alert");
+  const name  = document.getElementById("p-name").value.trim();
+  const desc  = document.getElementById("p-desc").value.trim();
+  const price = document.getElementById("p-price").value;
+  const stock = document.getElementById("p-stock").value;
+  const cat   = document.getElementById("p-cat").value;
+  const img   = document.getElementById("p-img").value.trim();
+  const extraImgsRaw = document.getElementById("p-extra-imgs").value.trim();
+  const video = document.getElementById("p-video").value.trim();
+
+  if (!name || !price) {
+    al.className = "alert alert-error"; al.style.display = "block";
+    al.textContent = "Product name and price are required."; return;
+  }
+
+  al.style.display = "none";
+
+  const res  = await authFetch("/api/admin/products", {
+    method: "POST",
+    body: JSON.stringify({ name, description: desc, price, stock: stock || 0, category: cat, image_url: img })
+  });
+  const data = await res.json();
+
+  if (!data.productId) {
+    al.className = "alert alert-error"; al.style.display = "block";
+    al.textContent = data.error || "Failed to add product."; return;
+  }
+
+  const productId = data.productId;
+
+  if (extraImgsRaw) {
+    const urls = extraImgsRaw.split("\n").map(u => u.trim()).filter(u => u.startsWith("http"));
+    for (let i = 0; i < urls.length; i++) {
+      await authFetch(`/api/media/${productId}`, {
+        method: "POST",
+        body: JSON.stringify({ url: urls[i], type: "image", sort_order: i + 1 })
+      });
+    }
+  }
+
+  if (video) {
+    await authFetch(`/api/media/${productId}`, {
+      method: "POST",
+      body: JSON.stringify({ url: video, type: "video", sort_order: 0 })
+    });
+  }
+
+  ["p-name","p-desc","p-price","p-stock","p-img","p-video"].forEach(id => {
+    document.getElementById(id).value = "";
+  });
+  document.getElementById("p-extra-imgs").value = "";
+  document.getElementById("extra-img-preview").innerHTML = "";
+  document.getElementById("video-preview").style.display = "none";
+  document.getElementById("video-frame").src = "";
+
+  al.className = "alert alert-success"; al.style.display = "block";
+  al.textContent = `✅ Product "${name}" added successfully!`;
+  showToast(`Product "${name}" added!`, "success");
+  loadProducts();
+}
+
+async function deleteProduct(id) {
+  if (!confirm("Are you sure you want to delete this product?")) return;
+  await authFetch(`/api/admin/products/${id}`, { method: "DELETE" });
+  showToast("Product deleted", "success");
+  loadProducts();
+}
+
+  // ── Users ─────────────────────────────────────────────────
+  async function loadUsers() {
+    const res   = await authFetch("/api/admin/users");
+    const users = await res.json();
+    document.getElementById("users-body").innerHTML = users.map(u => `
+      <tr>
+        <td>#${u.id}</td>
+        <td>${u.name}</td>
+        <td>${u.email}</td>
+        <td><span class="badge ${u.role==="admin"?"badge-paid":"badge-pending"}">${u.role}</span></td>
+        <td>${new Date(u.created_at).toLocaleDateString()}</td>
+      </tr>`).join("");
+  }
+
+  // Init
+  loadDashboard();
+</script>
+</body>
+</html>

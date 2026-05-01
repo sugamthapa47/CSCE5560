@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Orders — SecureShop</title>
+  <link rel="stylesheet" href="/css/style.css"/>
+</head>
+<body>
+  <div id="navbar"></div>
+
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title">My Orders</h2>
+      <p class="section-subtitle">Track your purchase history</p>
+
+      <div id="orders-container">
+        <div class="spinner"></div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer"><p>© 2025 <span>SecureShop</span></p></footer>
+
+  <script src="/js/cart.js"></script>
+  <script src="/js/api.js"></script>
+  <script>
+    if (!isLoggedIn()) window.location.href = "/pages/login.html";
+    renderNavbar();
+
+    const statusColors = {
+      pending: "badge-pending", paid: "badge-paid",
+      shipped: "badge-shipped", delivered: "badge-delivered", cancelled: "badge-cancelled"
+    };
+
+    async function loadOrders() {
+      try {
+        const res    = await authFetch("/api/orders/my");
+        const orders = await res.json();
+        const el     = document.getElementById("orders-container");
+
+        if (!orders.length) {
+          el.innerHTML = `
+            <div class="empty-state">
+              <div class="icon">📦</div>
+              <p style="font-size:1.1rem;margin-bottom:16px;">No orders yet</p>
+              <a href="/pages/products.html" class="btn-hero">Start Shopping</a>
+            </div>`;
+          return;
+        }
+
+        el.innerHTML = orders.map(order => {
+          const items = typeof order.items === "string" ? JSON.parse(order.items) : order.items;
+          return `
+            <div class="order-card">
+              <div class="order-header">
+                <div>
+                  <strong style="font-size:1rem;">Order #${order.id}</strong>
+                  <p style="color:#999;font-size:.85rem;margin-top:4px;">
+                    ${new Date(order.created_at).toLocaleDateString("en-US",{year:"numeric",month:"long",day:"numeric"})}
+                  </p>
+                </div>
+                <div style="text-align:right;">
+                  <span class="badge ${statusColors[order.status] || "badge-pending"}">${order.status}</span>
+                  <p style="font-size:1.1rem;font-weight:700;margin-top:6px;color:#1a1a2e;">
+                    $${parseFloat(order.total_amount).toFixed(2)}
+                  </p>
+                </div>
+              </div>
+              <div style="border-top:1px solid #f5f5f5;padding-top:16px;">
+                <p style="font-size:.85rem;color:#777;margin-bottom:10px;font-weight:600;">ITEMS</p>
+                ${items.map(i => `
+                  <div style="display:flex;justify-content:space-between;font-size:.9rem;padding:6px 0;border-bottom:1px solid #fafafa;">
+                    <span>${i.product} × ${i.qty}</span>
+                    <span>$${parseFloat(i.price).toFixed(2)} each</span>
+                  </div>`).join("")}
+              </div>
+            </div>`;
+        }).join("");
+      } catch {
+        document.getElementById("orders-container").innerHTML =
+          '<p style="color:red;text-align:center;">Failed to load orders.</p>';
+      }
+    }
+
+    loadOrders();
+  </script>
+</body>
+</html>
